@@ -28,7 +28,7 @@ class ProductItemDetails extends Component {
       method: 'GET',
     }
     const response = await fetch(apiUrl, options)
-    if (response.status === 200) {
+    if (response.ok) {
       const data = await response.json()
       const detailsData = {
         id: data.id,
@@ -97,9 +97,12 @@ class ProductItemDetails extends Component {
   }
 
   onDecrement = () => {
-    this.setState(prevState => ({
-      quantity: prevState.quantity - 1,
-    }))
+    const {quantity} = this.state
+    if (quantity > 0) {
+      this.setState({
+        quantity: quantity - 1,
+      })
+    }
   }
 
   submitSuccess = () => {
@@ -133,7 +136,11 @@ class ProductItemDetails extends Component {
     return (
       <>
         <div className="product-item-details-container">
-          <img src={imageUrl} alt="product" className="item-details-image" />
+          <img
+            src={imageUrl}
+            alt="similar product"
+            className="item-details-image"
+          />
           <div className="details-container">
             <h1 className="details-heading">{title}</h1>
             <p>{price}</p>
@@ -153,20 +160,20 @@ class ProductItemDetails extends Component {
             <p>Brand: {brand}</p>
             <hr />
             <div>
-              <button type="button" className="add-count-button">
-                <BsDashSquare
-                  testid="minus"
-                  className="minus-button"
-                  onClick={this.onDecrement}
-                />
+              <button
+                type="button"
+                className="add-count-button"
+                onClick={this.onDecrement}
+              >
+                <BsDashSquare className="minus-button" />
               </button>
-              {quantity}
-              <button type="button" className="add-count-button">
-                <BsPlusSquare
-                  testid="plus"
-                  className="minus-button"
-                  onClick={this.onIncrement}
-                />
+              <p>{quantity}</p>
+              <button
+                type="button"
+                className="add-count-button"
+                onClick={this.onIncrement}
+              >
+                <BsPlusSquare className="minus-button" />
               </button>
             </div>
             <button type="button" className="add-to-cart">
@@ -203,7 +210,7 @@ class ProductItemDetails extends Component {
     return (
       <>
         <Header />
-        {this.getProductDetails()})
+        {this.getProductDetails()}
       </>
     )
   }
